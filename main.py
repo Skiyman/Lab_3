@@ -1,5 +1,5 @@
 import uvicorn
-from pydantic import BaseModel
+
 from fastapi import FastAPI
 from db import create_tables
 from routers.car import car_router

@@ -67,11 +67,11 @@ async def patch_car(car_id: int, car: CarUpdateModel):
 @car_router.delete("/{car_id}")
 async def delete_car(car_id: int) -> SuccessMessage | ErrorModel:
     async with make_session() as session:
+        request = await session.execute(delete(Car).where(Car.id == car_id))
 
         try:
-            request = await session.execute(delete(Car).where(Car.id == car_id))
             await session.commit()
 
-            return SuccessMessage(status=True)
+            return SuccessMessage(status=200)
         except NoResultFound:
             return ErrorModel(error_message="Машина не найдена")

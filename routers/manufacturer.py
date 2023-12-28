@@ -75,7 +75,7 @@ async def delete_manufacturer(manufacturer_id: int) -> SuccessMessage | ErrorMod
             request = await session.execute(delete(Manufacturer).where(Manufacturer.id == manufacturer_id))
             await session.commit()
 
-            return SuccessMessage(status=True)
+            return SuccessMessage(status=200)
         except NoResultFound:
             return ErrorModel(error_message="Производитель не найден")
         except IntegrityError:

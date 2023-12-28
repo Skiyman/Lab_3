@@ -6,4 +6,4 @@ class ErrorModel(BaseModel):
 
 
 class SuccessMessage(BaseModel):
-    status: bool
+    status: int
