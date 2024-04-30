@@ -1,5 +1,3 @@
-
-
 from fastapi import APIRouter, Response
 from sqlalchemy import select, update, delete
 from sqlalchemy.exc import NoResultFound, IntegrityError
