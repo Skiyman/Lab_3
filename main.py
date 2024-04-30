@@ -8,6 +8,9 @@ from routers.manufacturer import manufacturer_router
 
 app = FastAPI()
 
+@app.on_event("startup")
+async def startup_event():
+    run_migrations()
 
 @app.get('/')
 async def home() -> dict:
@@ -25,5 +28,4 @@ app.include_router(
 )
 
 if __name__ == '__main__':
-    run_migrations()
     uvicorn.run('main:app', reload=True)
