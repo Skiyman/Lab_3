@@ -62,8 +62,6 @@ async def _create_database_async(url, database_name: str):
 async def _drop_database_async(url, database_name: str):
     connect_url = f"{os.path.dirname(url)}/postgres"
     db_engine = create_async_engine(connect_url, isolation_level="AUTOCOMMIT")
-    print(db_engine.pool.status())
-
     async with db_engine.begin() as conn:
         text = "DROP DATABASE {}".format(database_name.replace("'", "\\'"))
         await conn.execute(sqlalchemy.text(text))

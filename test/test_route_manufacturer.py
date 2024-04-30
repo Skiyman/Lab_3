@@ -15,7 +15,6 @@ async def manufacturers_entry(client: AsyncClient) -> ManufacturerModel:
 
 
 async def test_list_manufacturers(client: AsyncClient, manufacturers_entry: ManufacturerModel):
-    print(manufacturers_entry)
     response = await client.get("/manufacturers")
     body = response.json()
 
