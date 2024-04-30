@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from sqlalchemy import select, insert, update, delete
 from sqlalchemy.exc import NoResultFound, IntegrityError, MultipleResultsFound
 
@@ -33,7 +33,7 @@ async def get_manufacturer(manufacturer_id: int) -> ManufacturerModel | ErrorMod
         try:
             return request.scalar_one()
         except NoResultFound:
-            return ErrorModel(error_message="Производителя не существует")
+            raise HTTPException(status_code=404, detail="Производитель не найден")
 
 
 @manufacturer_router.post("")
@@ -62,7 +62,7 @@ async def patch_manufacturer(manufacturer_id: int,
                              manufacturer: ManufacturerUpdateModel) -> ManufacturerModel | ErrorModel:
     async with make_session() as session:
         request = await session.execute(update(Manufacturer).where(Manufacturer.id == manufacturer_id)
-                                .values(**manufacturer.get_values()))
+                                        .values(**manufacturer.get_values()))
         await session.commit()
 
         return await get_manufacturer(manufacturer_id)
@@ -77,6 +77,6 @@ async def delete_manufacturer(manufacturer_id: int) -> SuccessMessage | ErrorMod
 
             return SuccessMessage(status=200)
         except NoResultFound:
-            return ErrorModel(error_message="Производитель не найден")
+            raise HTTPException(status_code=404, detail="Производитель не найден")
         except IntegrityError:
-            return ErrorModel(error_message="Производитель уже привязан к какому-либо автомобилю")
+            raise HTTPException(status_code=400, detail="Производитель уже привязан к какому-либо автомобилю")

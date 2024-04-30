@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from sqlalchemy import select, insert, update, delete
 from sqlalchemy.exc import NoResultFound, IntegrityError
 
@@ -33,7 +33,7 @@ async def get_car(car_id: int) -> CarModel | ErrorModel:
             await session.commit()
             return request.scalar_one()
         except NoResultFound:
-            return ErrorModel(error_message="Машины не существует")
+            raise HTTPException(status_code=404, detail="Автомобиль не найден")
 
 
 @car_router.post("")
@@ -64,6 +64,7 @@ async def patch_car(car_id: int, car: CarUpdateModel):
         except IntegrityError:
             return ErrorModel(error_message="Производителя не существует")
 
+
 @car_router.delete("/{car_id}")
 async def delete_car(car_id: int) -> SuccessMessage | ErrorModel:
     async with make_session() as session:
@@ -74,4 +75,4 @@ async def delete_car(car_id: int) -> SuccessMessage | ErrorModel:
 
             return SuccessMessage(status=200)
         except NoResultFound:
-            return ErrorModel(error_message="Машина не найдена")
+            raise HTTPException(status_code=404, detail="Автомобиль не найден")

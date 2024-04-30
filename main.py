@@ -1,17 +1,12 @@
 import uvicorn
 
 from fastapi import FastAPI
-from db import create_tables
+
+from db import run_migrations
 from routers.car import car_router
 from routers.manufacturer import manufacturer_router
 
 app = FastAPI()
-
-
-@app.on_event("startup")
-async def on_startup() -> None:
-    # Создание таблиц в БД
-    await create_tables()
 
 
 @app.get('/')
@@ -30,4 +25,5 @@ app.include_router(
 )
 
 if __name__ == '__main__':
+    run_migrations()
     uvicorn.run('main:app', reload=True)
